@@ -1,4 +1,5 @@
 # https://atcoder.jp/contests/abc088/tasks/abc088_d
+# 答えは 全マス数 - 最短経路の長さ - 黒マスの数 = 不要な黒マスの数 となる
 H, W = map(int, input().split())
 M = []
 blacks = 0
@@ -14,20 +15,18 @@ for i in range(H):
 count = [[-1 for _ in range(W)] for _ in range(H)]
 
 queue = [[0, 0, 1]]
-# result = [0 for _ in range(H*W)]
 
 directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
 while queue:
-    y, x, cnt = queue.pop(0)
-    if count[y][x] != -1:
+    row, column, cnt = queue.pop(0)
+    if count[row][column] != -1:
         continue
-    count[y][x] = cnt
-    # result[cnt] += 1
+    count[row][column] = cnt
     for d in directions:
-        ny = y + d[0]
-        nx = x + d[1]
-        if 0 <= ny < H and 0 <= nx < W and M[ny][nx] != '#':
-            queue.append([ny, nx, cnt+1])
+        nrow = row + d[0]
+        ncolumn = column + d[1]
+        if 0 <= nrow < H and 0 <= ncolumn < W and M[nrow][ncolumn] != '#':
+            queue.append([nrow, ncolumn, cnt+1])
 
 print(H*W - count[H-1][W-1] - blacks)

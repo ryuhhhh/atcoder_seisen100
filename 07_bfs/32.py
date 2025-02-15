@@ -39,9 +39,9 @@ while True:
             else:
                 maze[row][column] = line[column//2]
     # mazeにdistを直接書き込むのだが、0や1で初期化すると壁マスとの区別がつかないので、1001で初期化
-    stack = [[0, 0, 1001]]
-    while stack:
-        row, column, dist = stack.pop(0)
+    queue = [[0, 0, 1001]]
+    while queue:
+        row, column, dist = queue.pop(0)
         wall_directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
         for wd in wall_directions:
             wrow = row + wd[0]
@@ -60,6 +60,6 @@ while True:
                 if 0 <= nrow < 2*H-1 and 0 <= ncolumn < 2*W-1 and\
                         maze[nrow][ncolumn] == 2:
                     maze[nrow][ncolumn] = dist+1
-                    stack.append([nrow, ncolumn, dist+1])
+                    queue.append([nrow, ncolumn, dist+1])
 
     print(maze[-1][-1]-1000 if maze[-1][-1] != 2 else 0)

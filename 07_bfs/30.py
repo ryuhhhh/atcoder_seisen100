@@ -27,21 +27,21 @@ for i in range(H):
 
 # チーズから次のチーズまでの距離をカウントしていく
 # 3次元配列で、[row, column, 移動距離, 体力]をスタックに入れていく
-stack = [[start[0], start[1], 0, 1]]
+queue = [[start[0], start[1], 0, 1]]
 # N個のチーズを食べる
 for _ in range(N):
     # 次のチーズを探す旅に毎回初期化
     visited = [[False for _ in range(W)] for _ in range(H)]
-    while stack:
-        row, column, dist, life = stack.pop(0)
+    while queue:
+        row, column, dist, life = queue.pop(0)
         # 自分の体力と同じ固さのチーズ発見
         if [row, column] == cheese[life]:
             life += 1
             if life == N+1:
                 print(dist)
                 exit()
-            # stackを初期化して次のチーズを探す
-            stack = [[row, column, dist, life]]
+            # queueを初期化して次のチーズを探す
+            queue = [[row, column, dist, life]]
             break
         d = [[1, 0], [0, 1], [-1, 0], [0, -1]]
         for dx, dy in d:
@@ -51,4 +51,4 @@ for _ in range(N):
             if 0 <= nrow < H and 0 <= ncolumn < W and\
                     not visited[nrow][ncolumn] and M[nrow][ncolumn] != 11:
                 visited[nrow][ncolumn] = True
-                stack.append([nrow, ncolumn, dist+1, life])
+                queue.append([nrow, ncolumn, dist+1, life])
