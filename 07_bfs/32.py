@@ -16,8 +16,8 @@
 ただし、
 0: 壁がない通路
 1: 壁がある通路(通れない)
-2: 本当のマスどのみちと
-x: 本当は存在どの道と(どの道周囲に止まれるマスがないので2で置く)
+2: 本当のマス
+x: 本当は存在しないマス(便宜上作るがどのみち周囲に止まれるマスがないので2で置く)
 """
 while True:
     W, H = map(int, input().split())
@@ -31,13 +31,14 @@ while True:
         # 空白を取り除いて、1文字ずつ取り出す、ただしintにして配列に
         line = list(map(int, input().replace(" ", "")))
         for column in range(2*W-1):
+            # 普通のマス
             if (row % 2 == 0 and column % 2 == 0) or\
                     (row % 2 == 1 and column % 2 == 1):
-                # 普通のマスを0,1にすると、壁のマスと区別がつかないので、1000-indexedにしておく
-                maze[row][column] = 1000
-            # 偶数行・奇数列
+                maze[row][column] = 2
+            # 壁マス
             else:
                 maze[row][column] = line[column//2]
+    # mazeにdistを直接書き込むのだが、0や1で初期化すると壁マスとの区別がつかないので、1001で初期化
     stack = [[0, 0, 1001]]
     while stack:
         row, column, dist = stack.pop(0)
@@ -45,6 +46,7 @@ while True:
         for wd in wall_directions:
             wrow = row + wd[0]
             wcolumn = column + wd[1]
+            # 迷路の範囲外なら何もできない
             if not (0 <= wrow < 2*H-1) or not (0 <= wcolumn < 2*W-1):
                 continue
             # 壁になっているなら何もできない
@@ -56,8 +58,8 @@ while True:
                 nrow = row + wd[0]*2
                 ncolumn = column + wd[1]*2
                 if 0 <= nrow < 2*H-1 and 0 <= ncolumn < 2*W-1 and\
-                        maze[nrow][ncolumn] == 1000:
+                        maze[nrow][ncolumn] == 2:
                     maze[nrow][ncolumn] = dist+1
                     stack.append([nrow, ncolumn, dist+1])
 
-    print(maze[-1][-1]-1000)
+    print(maze[-1][-1]-1000 if maze[-1][-1] != 2 else 0)
